@@ -380,32 +380,7 @@ function handlePaso3Submit(e) {
         sitios_realizados: parseInt(document.getElementById('p3_sitios_real').value) || 0,
         observaciones: document.getElementById('p3_obs').value
     };
-    
-    // Validar que no se realice más de lo planificado
-    if (formData.hitos_realizados > formData.hitos_planificados) {
-        const msg = document.getElementById('paso3Message');
-        msg.innerHTML = 'No puede realizar más hitos de los planificados';
-        msg.className = 'alert alert-danger';
-        msg.style.display = 'block';
-        return;
-    }
-    
-    if (formData.pnh_realizados > formData.pnh_planificados) {
-        const msg = document.getElementById('paso3Message');
-        msg.innerHTML = 'No puede realizar más PNH de los planificados';
-        msg.className = 'alert alert-danger';
-        msg.style.display = 'block';
-        return;
-    }
-    
-    if (formData.sitios_realizados > formData.sitios_planificados) {
-        const msg = document.getElementById('paso3Message');
-        msg.innerHTML = 'No puede realizar más sitios de los planificados';
-        msg.className = 'alert alert-danger';
-        msg.style.display = 'block';
-        return;
-    }
-    
+      
     // Guardar datos
     servicioTemp.paso3 = formData;
     
