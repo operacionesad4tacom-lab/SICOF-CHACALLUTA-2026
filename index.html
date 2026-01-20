@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SICOF - Carabineros de Chile</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" href="assets/logos/favicon.ico">
+</head>
+<body>
+    <!-- LOGIN VIEW -->
+    <div id="loginView" class="view active">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <img src="assets/logos/escudo-carabineros.png" alt="Carabineros de Chile" class="login-logo">
+                    <h1>CARABINEROS DE CHILE</h1>
+                    <p style="opacity: 0.9; font-size: 0.875rem;">Sistema Integrado de Control Fronterizo</p>
+                    <p style="opacity: 0.8; font-size: 0.75rem; margin-top: 8px;">Especialidad Montaña y Fronteras</p>
+                </div>
+                
+                <div class="login-body">
+                    <div id="loginMessage" class="alert" style="display: none;"></div>
+                    
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="email" class="form-label">📧 Correo Institucional</label>
+                            <input type="email" id="email" class="form-control" placeholder="usuario@carabineros.cl" required autocomplete="username">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="password" class="form-label">🔒 Contraseña</label>
+                            <input type="password" id="password" class="form-control" placeholder="Ingrese su contraseña" required autocomplete="current-password">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary" style="width: 100%;">
+                            <span id="loginText">🚪 INGRESAR AL SISTEMA</span>
+                            <span id="loginLoading" style="display: none;">
+                                <div class="loading-spinner"></div>
+                                Verificando...
+                            </span>
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="login-footer">
+                    <p>© 2026 Carabineros de Chile. Todos los derechos reservados.</p>
+                    <p style="font-size: 0.75rem; margin-top: 4px;">SICOF v2.0 - Plataforma Operativa</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HEADER (visible después de login) -->
+    <header id="mainHeader" class="header-institucional" style="display: none;">
+        <div class="header-content">
+            <div class="logo-container">
+                <img src="assets/logos/escudo-carabineros.png" alt="Carabineros de Chile" class="logo-img">
+                <div class="logo-text">
+                    <div class="logo-title">SICOF - Sistema Integrado</div>
+                    <div class="logo-subtitle">Control Operativo Fronterizo</div>
+                </div>
+            </div>
+            <div class="user-info">
+                <div id="headerCuartel" style="font-weight: 600;">-</div>
+                <div id="headerUser" style="font-size: 0.875rem; opacity: 0.9;">-</div>
+                <button onclick="logout()" class="btn btn-outline btn-sm" style="margin-top: 8px;">🚪 Salir</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- DASHBOARD VIEW (Jefatura) -->
+    <div id="dashboardView" class="view">
+        <main class="container">
+            <h1 style="margin-bottom: 8px;">📊 Dashboard Ejecutivo</h1>
+            <p style="color: var(--gris-medio); margin-bottom: 32px;">Panel de control operacional en tiempo real</p>
+            
+            <!-- ESTADÍSTICAS ANUALES -->
+            <div class="card" style="margin-bottom: 32px; background: linear-gradient(135deg, var(--verde-oficial), var(--verde-oscuro)); color: white;">
+                <div class="card-body">
+                    <h3 style="color: white; margin-bottom: 16px;">📈 Acumulado del Año 2026</h3>
+                    <div class="grid grid-4">
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; font-weight: bold;" id="anualeServicios">-</div>
+                            <div style="opacity: 0.9;">Servicios Totales</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; font-weight: bold;" id="anualeControles">-</div>
+                            <div style="opacity: 0.9;">Controles</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; font-weight: bold;" id="anualeInfracciones">-</div>
+                            <div style="opacity: 0.9;">Infracciones</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; font-weight: bold;" id="anualeDetenidos">-</div>
+                            <div style="opacity: 0.9;">Detenidos</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ÚLTIMAS 24 HORAS -->
+            <h2 style="margin-bottom: 16px; color: var(--verde-oscuro);">⏱️ Últimas 24 Horas</h2>
+            <div class="grid grid-4" style="margin-bottom: 32px;">
+                <div class="card stat-card">
+                    <div class="stat-icon">🚔</div>
+                    <div class="stat-value" id="totalServicios">-</div>
+                    <div class="stat-label">Servicios</div>
+                </div>
+                <div class="card stat-card">
+                    <div class="stat-icon">🔍</div>
+                    <div class="stat-value" id="totalControles">-</div>
+                    <div class="stat-label">Controles</div>
+                </div>
+                <div class="card stat-card">
+                    <div class="stat-icon">⚠️</div>
+                    <div class="stat-value" id="totalInfracciones">-</div>
+                    <div class="stat-label">Infracciones</div>
+                </div>
+                <div class="card stat-card">
+                    <div class="stat-icon">👮</div>
+                    <div class="stat-value" id="totalDetenidos">-</div>
+                    <div class="stat-label">Detenidos</div>
+                </div>
+            </div>
+
+            <!-- ACCESOS RÁPIDOS A REPORTES -->
+            <h2 style="margin-bottom: 16px; color: var(--verde-oscuro);">📋 Reportes y Análisis</h2>
+            <div class="grid grid-3" style="margin-bottom: 48px;">
+                <div class="card card-hover-effect" onclick="showView('reporteEjecutivo')">
+                    <div class="card-header" style="text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: 16px;">📈</div>
+                        <h3 class="card-title">Reporte Ejecutivo</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>KPIs principales y gráficos de evolución</p>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 16px;">Ver Reporte →</button>
+                    </div>
+                </div>
+                
+                <div class="card card-hover-effect" onclick="showView('reporteDetallado')">
+                    <div class="card-header" style="text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: 16px;">📋</div>
+                        <h3 class="card-title">Reporte Detallado</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Listado completo con filtros avanzados</p>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 16px;">Ver Reporte →</button>
+                    </div>
+                </div>
+                
+                <div class="card card-hover-effect" onclick="showView('ranking')">
+                    <div class="card-header" style="text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: 16px;">🏆</div>
+                        <h3 class="card-title">Ranking</h3>
+                    </div>
+                    <div class="card-body">
+                        <p>Clasificación por desempeño operacional</p>
+                        <button class="btn btn-primary" style="width: 100%; margin-top: 16px;">Ver Ranking →</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- LISTA DE SERVICIOS ÚLTIMAS 24H -->
+            <h2 style="margin-top: 48px; margin-bottom: 16px; color: var(--verde-oscuro);">📋 Servicios Registrados (Últimas 24h)</h2>
+            <div id="listaServicios24h">
+                <div class="loading-spinner" style="margin: 2rem auto;"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- DIGITADOR VIEW - PASO 1 -->
+    <div id="digitadorPaso1View" class="view">
+        <main class="container">
+            <div class="paso-indicador">
+                <div class="paso activo"><div class="paso-numero">1</div><div class="paso-texto">Datos del Servicio</div></div>
+                <div class="paso"><div class="paso-numero">2</div><div class="paso-texto">Demanda Ciudadana</div></div>
+                <div class="paso"><div class="paso-numero">3</div><div class="paso-texto">Demanda Preventiva</div></div>
+                <div class="paso"><div class="paso-numero">4</div><div class="paso-texto">Confirmación</div></div>
+            </div>
+            
+            <div id="paso1Message" class="alert" style="display: none;"></div>
+            
+            <form id="paso1Form">
+                <div class="form-section">
+                    <h3 class="section-title"><span class="section-icon">📋</span>DATOS BÁSICOS DEL SERVICIO</h3>
+                    
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label for="p1_fecha" class="form-label">📅 FECHA DEL SERVICIO</label>
+                            <input type="date" id="p1_fecha" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="p1_cuartel" class="form-label">🏛️ CUARTEL POLICIAL</label>
+                            <select id="p1_cuartel" class="form-control" required></select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="p1_nombre" class="form-label">🚔 NOMBRE DEL SERVICIO</label>
+                        <input type="text" id="p1_nombre" class="form-control" placeholder="Ej: Patrullaje fronterizo sector norte" maxlength="200" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="p1_jefe" class="form-label">👮‍♂️ JEFE DEL SERVICIO</label>
+                        <input type="text" id="p1_jefe" class="form-control" placeholder="Ej: Capitán Juan Pérez" required>
+                    </div>
+                    
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label class="form-label">🕐 HORARIO DEL SERVICIO</label>
+                            <div class="time-inputs">
+                                <input type="time" id="p1_inicio" class="form-control" required>
+                                <span class="time-separator">─</span>
+                                <input type="time" id="p1_termino" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; gap: 16px;">
+                    <button type="button" class="btn btn-outline" onclick="logout()">🚪 Salir</button>
+                    <button type="submit" class="btn btn-primary">CONTINUAR →</button>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <!-- DIGITADOR VIEW - PASO 2 -->
+    <div id="digitadorPaso2View" class="view">
+        <main class="container">
+            <div class="paso-indicador">
+                <div class="paso completado"><div class="paso-numero">✓</div><div class="paso-texto">Datos del Servicio</div></div>
+                <div class="paso activo"><div class="paso-numero">2</div><div class="paso-texto">Demanda Ciudadana</div></div>
+                <div class="paso"><div class="paso-numero">3</div><div class="paso-texto">Demanda Preventiva</div></div>
+                <div class="paso"><div class="paso-numero">4</div><div class="paso-texto">Confirmación</div></div>
+            </div>
+            
+            <form id="paso2Form">
+                <div class="form-section">
+                    <h3 class="section-title"><span class="section-icon">🔍</span>CONTROLES REALIZADOS</h3>
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label for="p2_inv" class="form-label">Controles Investigativos</label>
+                            <input type="number" id="p2_inv" class="form-control" min="0" value="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="p2_prev" class="form-label">Controles Preventivos</label>
+                            <input type="number" id="p2_prev" class="form-control" min="0" value="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="p2_mig" class="form-label">Controles Migratorios</label>
+                            <input type="number" id="p2_mig" class="form-control" min="0" value="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="p2_veh" class="form-label">Controles Vehiculares</label>
+                            <input type="number" id="p2_veh" class="form-control" min="0" value="0" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title"><span class="section-icon">⚠️</span>INFRACCIONES</h3>
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label for="p2_trans" class="form-label">Infracciones de Tránsito</label>
+                            <input type="number" id="p2_trans" class="form-control" min="0" value="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="p2_otras" class="form-label">Otras Infracciones</label>
+                            <input type="number" id="p2_otras" class="form-control" min="0" value="0" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title"><span class="section-icon">👮</span>DETENIDOS Y DENUNCIAS</h3>
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label for="p2_det" class="form-label">Cantidad de Detenidos</label>
+                            <input type="number" id="p2_det" class="form-control" min="0" value="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="p2_motivo" class="form-label">Motivo de Detención</label>
+                            <select id="p2_motivo" class="form-control">
+                                <option value="">Sin detenidos</option>
+                                <option value="robo_hurto">Robo/Hurto</option>
+                                <option value="drogas">Drogas</option>
+                                <option value="contrabando">Contrabando</option>
+                                <option value="ley_control_armas">Ley Control de Armas</option>
+                                <option value="trafico_migrantes">Tráfico de Migrantes</option>
+                                <option value="receptacion_vehiculos">Receptación de Vehículos</option>
+                                <option value="otros">Otros</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="p2_vuln" class="form-label">Denuncias por Vulneración</label>
+                            <input type="number" id="p2_vuln" class="form-control" min="0" value="0" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; gap: 16px;">
+                    <button type="button" class="btn btn-outline" onclick="showView('digitadorPaso1')">← ANTERIOR</button>
+                    <button type="submit" class="btn btn-primary">CONTINUAR →</button>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <!-- DIGITADOR VIEW - PASO 3 -->
+    <div id="digitadorPaso3View" class="view">
+        <main class="container">
+            <div class="paso-indicador">
+                <div class="paso completado"><div class="paso-numero">✓</div><div class="paso-texto">Datos del Servicio</div></div>
+                <div class="paso completado"><div class="paso-numero">✓</div><div class="paso-texto">Demanda Ciudadana</div></div>
+                <div class="paso activo"><div class="paso-numero">3</div><div class="paso-texto">Demanda Preventiva</div></div>
+                <div class="paso"><div class="paso-numero">4</div><div class="paso-texto">Confirmación</div></div>
+            </div>
+            
+            <div id="paso3Message" class="alert" style="display: none;"></div>
+            
+            <form id="paso3Form">
+                <div class="form-section">
+                    <h3 class="section-title"><span class="section-icon">📍</span>HITOS</h3>
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label for="p3_hitos_plan" class="form-label">Hitos Planificados</label>
+                            <input type="number" id="p3_hitos_plan" class="form-control" min="0" value="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="p3_hitos_real" class="form-label">Hitos Realizados</label>
+                            <input type="number" id="p3_hitos_real" class="form-control" min="0" value="0" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title"><span class="section-icon">🎯</span>PUNTOS DE NOTORIA HABITUALIDAD (PNH)</h3>
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label for="p3_pnh_plan" class="form-label">PNH Planificados</label>
+                            <input type="number" id="p3_pnh_plan" class="form-control" min="0" value="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="p3_pnh_real" class="form-label">PNH Realizados</label>
+                            <input type="number" id="p3_pnh_real" class="form-control" min="0" value="0" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title"><span class="section-icon">🏔️</span>SITIOS NO HABILITADOS</h3>
+                    <div class="grid grid-2">
+                        <div class="form-group">
+                            <label for="p3_sitios_plan" class="form-label">Sitios Planificados</label>
+                            <input type="number" id="p3_sitios_plan" class="form-control" min="0" value="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="p3_sitios_real" class="form-label">Sitios Realizados</label>
+                            <input type="number" id="p3_sitios_real" class="form-control" min="0" value="0" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title"><span class="section-icon">📝</span>OBSERVACIONES</h3>
+                    <div class="form-group">
+                        <label for="p3_obs" class="form-label">Observaciones del Servicio</label>
+                        <textarea id="p3_obs" class="form-control" rows="4" placeholder="Ingrese observaciones relevantes del servicio..."></textarea>
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: space-between; gap: 16px;">
+                    <button type="button" class="btn btn-outline" onclick="showView('digitadorPaso2')">← ANTERIOR</button>
+                    <button type="submit" class="btn btn-primary">CONTINUAR →</button>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <!-- DIGITADOR VIEW - PASO 4 (Confirmación) -->
+    <div id="digitadorPaso4View" class="view">
+        <main class="container">
+            <div class="paso-indicador">
+                <div class="paso completado"><div class="paso-numero">✓</div><div class="paso-texto">Datos del Servicio</div></div>
+                <div class="paso completado"><div class="paso-numero">✓</div><div class="paso-texto">Demanda Ciudadana</div></div>
+                <div class="paso completado"><div class="paso-numero">✓</div><div class="paso-texto">Demanda Preventiva</div></div>
+                <div class="paso activo"><div class="paso-numero">4</div><div class="paso-texto">Confirmación</div></div>
+            </div>
+            
+            <div id="resumenContainer"></div>
+            
+            <div style="display: flex; justify-content: space-between; gap: 16px; margin-top: 32px;">
+                <button type="button" class="btn btn-outline" onclick="showView('digitadorPaso3')">← ANTERIOR</button>
+                <button type="button" class="btn btn-primary" onclick="guardarServicioCompleto()">✅ CONFIRMAR Y GUARDAR</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- REPORTE EJECUTIVO -->
+    <div id="reporteEjecutivoView" class="view">
+        <main class="container">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+                <div>
+                    <h1>📈 Reporte Ejecutivo</h1>
+                    <p style="color: var(--gris-medio);">Análisis consolidado de servicios operacionales</p>
+                </div>
+                <select id="periodoEjecutivo" class="form-control" style="max-width: 200px;" onchange="cargarReporteEjecutivo()">
+                    <option value="mes">Último mes</option>
+                    <option value="trimestre">Último trimestre</option>
+                    <option value="semestre">Último semestre</option>
+                    <option value="ano">Último año</option>
+                </select>
+            </div>
+            
+            <div id="reporteEjecutivoContent"></div>
+            
+            <div style="margin-top: 32px; text-align: center;">
+                <button class="btn btn-outline" onclick="showView('dashboard')">← Volver al Dashboard</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- REPORTE DETALLADO -->
+    <div id="reporteDetalladoView" class="view">
+        <main class="container">
+            <h1 style="margin-bottom: 32px;">📋 Reporte Detallado</h1>
+            
+            <div class="form-section">
+                <div class="grid grid-3">
+                    <div class="form-group">
+                        <label for="filtroFechaInicio" class="form-label">Fecha Inicio</label>
+                        <input type="date" id="filtroFechaInicio" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="filtroFechaFin" class="form-label">Fecha Fin</label>
+                        <input type="date" id="filtroFechaFin" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="filtroCuartel" class="form-label">Cuartel</label>
+                        <select id="filtroCuartel" class="form-control">
+                            <option value="">Todos</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="cargarReporteDetallado()">🔍 Buscar</button>
+                <button class="btn btn-outline" onclick="exportarCSV()">📥 Exportar CSV</button>
+            </div>
+            
+            <div id="reporteDetalladoContent"></div>
+            
+            <div style="margin-top: 32px; text-align: center;">
+                <button class="btn btn-outline" onclick="showView('dashboard')">← Volver al Dashboard</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- RANKING -->
+    <div id="rankingView" class="view">
+        <main class="container">
+            <!-- Breadcrumb de navegación -->
+            <div id="rankingBreadcrumb" style="margin-bottom: 16px; display: none;">
+                <button class="btn btn-outline btn-sm" onclick="volverRankingGeneral()">
+                    ← Volver al Ranking General
+                </button>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px;">
+                <div>
+                    <h1 id="rankingTitle">🏆 Ranking de Cuarteles</h1>
+                    <p id="rankingSubtitle" style="color: var(--gris-medio);">Clasificación por desempeño operacional</p>
+                </div>
+                <select id="periodoRanking" class="form-control" style="max-width: 200px;" onchange="cargarRanking()">
+                    <option value="mes">Último mes</option>
+                    <option value="trimestre">Último trimestre</option>
+                    <option value="semestre">Último semestre</option>
+                    <option value="ano">Último año</option>
+                </select>
+            </div>
+            
+            <div id="rankingContent"></div>
+            
+            <div style="margin-top: 32px; text-align: center;">
+                <button class="btn btn-outline" onclick="showView('dashboard')">← Volver al Dashboard</button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
