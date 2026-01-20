@@ -244,43 +244,76 @@ function showToast(message, type = 'info', duration = 3000) {
 // ========== DASHBOARD ==========
 async function cargarDashboard() {
     try {
-        const fechas = getDateRange('mes');
+        // ÚLTIMAS 24 HORAS
+        const ahora = new Date();
+        const hace24h = new Date(ahora.getTime() - 24 * 60 * 60 * 1000);
         
-        const { data, error } = await window.supabase
+        const { data: ultimas24h, error: error24h } = await window.supabase
             .from('servicios')
             .select('*')
-            .gte('fecha', fechas.start)
-            .lte('fecha', fechas.end);
+            .gte('created_at', hace24h.toISOString());
         
-        if (error) throw error;
+        if (error24h) throw error24h;
         
-        // Calcular estadísticas
-        const stats = {
-            totalServicios: data.length,
+        // Calcular estadísticas últimas 24h
+        const stats24h = {
+            totalServicios: ultimas24h.length,
             totalControles: 0,
             totalInfracciones: 0,
             totalDetenidos: 0
         };
         
-        data.forEach(s => {
-            stats.totalControles += (s.controles_investigativos || 0) + (s.controles_preventivos || 0) + 
-                                    (s.controles_migratorios || 0) + (s.controles_vehiculares || 0);
-            stats.totalInfracciones += (s.infracciones_transito || 0) + (s.otras_infracciones || 0);
-            stats.totalDetenidos += (s.detenidos_cantidad || 0);
+        ultimas24h.forEach(s => {
+            stats24h.totalControles += (s.controles_investigativos || 0) + (s.controles_preventivos || 0) + 
+                                       (s.controles_migratorios || 0) + (s.controles_vehiculares || 0);
+            stats24h.totalInfracciones += (s.infracciones_transito || 0) + (s.otras_infracciones || 0);
+            stats24h.totalDetenidos += (s.detenidos_cantidad || 0);
         });
         
-        // Actualizar UI
-        document.getElementById('totalServicios').textContent = formatNumber(stats.totalServicios);
-        document.getElementById('totalControles').textContent = formatNumber(stats.totalControles);
-        document.getElementById('totalInfracciones').textContent = formatNumber(stats.totalInfracciones);
-        document.getElementById('totalDetenidos').textContent = formatNumber(stats.totalDetenidos);
+        // Actualizar UI - Últimas 24 horas
+        document.getElementById('totalServicios').textContent = formatNumber(stats24h.totalServicios);
+        document.getElementById('totalControles').textContent = formatNumber(stats24h.totalControles);
+        document.getElementById('totalInfracciones').textContent = formatNumber(stats24h.totalInfracciones);
+        document.getElementById('totalDetenidos').textContent = formatNumber(stats24h.totalDetenidos);
+        
+        // ACUMULADO DEL AÑO
+        const inicioAño = new Date('2026-01-01').toISOString().split('T')[0];
+        const hoy = new Date().toISOString().split('T')[0];
+        
+        const { data: dataAnual, error: errorAnual } = await window.supabase
+            .from('servicios')
+            .select('*')
+            .gte('fecha', inicioAño)
+            .lte('fecha', hoy);
+        
+        if (errorAnual) throw errorAnual;
+        
+        // Calcular estadísticas anuales
+        const statsAnual = {
+            totalServicios: dataAnual.length,
+            totalControles: 0,
+            totalInfracciones: 0,
+            totalDetenidos: 0
+        };
+        
+        dataAnual.forEach(s => {
+            statsAnual.totalControles += (s.controles_investigativos || 0) + (s.controles_preventivos || 0) + 
+                                         (s.controles_migratorios || 0) + (s.controles_vehiculares || 0);
+            statsAnual.totalInfracciones += (s.infracciones_transito || 0) + (s.otras_infracciones || 0);
+            statsAnual.totalDetenidos += (s.detenidos_cantidad || 0);
+        });
+        
+        // Actualizar UI - Acumulado Anual
+        document.getElementById('anualeServicios').textContent = formatNumber(statsAnual.totalServicios);
+        document.getElementById('anualeControles').textContent = formatNumber(statsAnual.totalControles);
+        document.getElementById('anualeInfracciones').textContent = formatNumber(statsAnual.totalInfracciones);
+        document.getElementById('anualeDetenidos').textContent = formatNumber(statsAnual.totalDetenidos);
         
     } catch (error) {
         console.error('Error cargando dashboard:', error);
         showToast('Error al cargar datos del dashboard', 'danger');
     }
 }
-
 // ========== DIGITADOR - PASO 1 ==========
 function inicializarPaso1() {
     // Cargar cuarteles
