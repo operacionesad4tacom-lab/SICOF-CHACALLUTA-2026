@@ -69,71 +69,100 @@
         </div>
     </header>
 
-    <!-- DASHBOARD VIEW (Jefatura) -->
-    <div id="dashboardView" class="view">
-        <main class="container">
-            <h1 style="margin-bottom: 24px;">📊 Dashboard Ejecutivo</h1>
+<!-- DASHBOARD VIEW (Jefatura) -->
+<div id="dashboardView" class="view">
+    <main class="container">
+        <h1 style="margin-bottom: 8px;">📊 Dashboard Ejecutivo</h1>
+        <p style="color: var(--gris-medio); margin-bottom: 32px;">Panel de control operacional en tiempo real</p>
+        
+        <!-- ESTADÍSTICAS ANUALES -->
+        <div class="card" style="margin-bottom: 32px; background: linear-gradient(135deg, var(--verde-oficial), var(--verde-oscuro)); color: white;">
+            <div class="card-body">
+                <h3 style="color: white; margin-bottom: 16px;">📈 Acumulado del Año 2026</h3>
+                <div class="grid grid-4">
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; font-weight: bold;" id="anualeServicios">-</div>
+                        <div style="opacity: 0.9;">Servicios Totales</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; font-weight: bold;" id="anualeControles">-</div>
+                        <div style="opacity: 0.9;">Controles</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; font-weight: bold;" id="anualeInfracciones">-</div>
+                        <div style="opacity: 0.9;">Infracciones</div>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; font-weight: bold;" id="anualeDetenidos">-</div>
+                        <div style="opacity: 0.9;">Detenidos</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ÚLTIMAS 24 HORAS -->
+        <h2 style="margin-bottom: 16px; color: var(--verde-oscuro);">⏱️ Últimas 24 Horas</h2>
+        <div class="grid grid-4" style="margin-bottom: 32px;">
+            <div class="card stat-card">
+                <div class="stat-icon">🚔</div>
+                <div class="stat-value" id="totalServicios">-</div>
+                <div class="stat-label">Servicios</div>
+            </div>
+            <div class="card stat-card">
+                <div class="stat-icon">🔍</div>
+                <div class="stat-value" id="totalControles">-</div>
+                <div class="stat-label">Controles</div>
+            </div>
+            <div class="card stat-card">
+                <div class="stat-icon">⚠️</div>
+                <div class="stat-value" id="totalInfracciones">-</div>
+                <div class="stat-label">Infracciones</div>
+            </div>
+            <div class="card stat-card">
+                <div class="stat-icon">👮</div>
+                <div class="stat-value" id="totalDetenidos">-</div>
+                <div class="stat-label">Detenidos</div>
+            </div>
+        </div>
+
+        <!-- ACCESOS RÁPIDOS A REPORTES -->
+        <h2 style="margin-bottom: 16px; color: var(--verde-oscuro);">📋 Reportes y Análisis</h2>
+        <div class="grid grid-3">
+            <div class="card card-hover-effect" onclick="showView('reporteEjecutivo')">
+                <div class="card-header" style="text-align: center;">
+                    <div style="font-size: 3rem; margin-bottom: 16px;">📈</div>
+                    <h3 class="card-title">Reporte Ejecutivo</h3>
+                </div>
+                <div class="card-body">
+                    <p>KPIs principales y gráficos de evolución</p>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 16px;">Ver Reporte →</button>
+                </div>
+            </div>
             
-            <div class="grid grid-4">
-                <div class="card stat-card">
-                    <div class="stat-icon">🚔</div>
-                    <div class="stat-value" id="totalServicios">-</div>
-                    <div class="stat-label">Total Servicios</div>
+            <div class="card card-hover-effect" onclick="showView('reporteDetallado')">
+                <div class="card-header" style="text-align: center;">
+                    <div style="font-size: 3rem; margin-bottom: 16px;">📋</div>
+                    <h3 class="card-title">Reporte Detallado</h3>
                 </div>
-                <div class="card stat-card">
-                    <div class="stat-icon">🔍</div>
-                    <div class="stat-value" id="totalControles">-</div>
-                    <div class="stat-label">Total Controles</div>
-                </div>
-                <div class="card stat-card">
-                    <div class="stat-icon">⚠️</div>
-                    <div class="stat-value" id="totalInfracciones">-</div>
-                    <div class="stat-label">Total Infracciones</div>
-                </div>
-                <div class="card stat-card">
-                    <div class="stat-icon">👮</div>
-                    <div class="stat-value" id="totalDetenidos">-</div>
-                    <div class="stat-label">Total Detenidos</div>
+                <div class="card-body">
+                    <p>Listado completo con filtros avanzados</p>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 16px;">Ver Reporte →</button>
                 </div>
             </div>
-
-            <div class="grid grid-3" style="margin-top: 32px;">
-                <div class="card card-hover-effect" onclick="showView('reporteEjecutivo')">
-                    <div class="card-header" style="text-align: center;">
-                        <div style="font-size: 3rem; margin-bottom: 16px;">📈</div>
-                        <h3 class="card-title">Reporte Ejecutivo</h3>
-                    </div>
-                    <div class="card-body">
-                        <p>KPIs principales y gráficos de evolución</p>
-                        <button class="btn btn-primary" style="width: 100%; margin-top: 16px;">Ver Reporte →</button>
-                    </div>
+            
+            <div class="card card-hover-effect" onclick="showView('ranking')">
+                <div class="card-header" style="text-align: center;">
+                    <div style="font-size: 3rem; margin-bottom: 16px;">🏆</div>
+                    <h3 class="card-title">Ranking</h3>
                 </div>
-                
-                <div class="card card-hover-effect" onclick="showView('reporteDetallado')">
-                    <div class="card-header" style="text-align: center;">
-                        <div style="font-size: 3rem; margin-bottom: 16px;">📋</div>
-                        <h3 class="card-title">Reporte Detallado</h3>
-                    </div>
-                    <div class="card-body">
-                        <p>Listado completo con filtros avanzados</p>
-                        <button class="btn btn-primary" style="width: 100%; margin-top: 16px;">Ver Reporte →</button>
-                    </div>
-                </div>
-                
-                <div class="card card-hover-effect" onclick="showView('ranking')">
-                    <div class="card-header" style="text-align: center;">
-                        <div style="font-size: 3rem; margin-bottom: 16px;">🏆</div>
-                        <h3 class="card-title">Ranking</h3>
-                    </div>
-                    <div class="card-body">
-                        <p>Clasificación por desempeño operacional</p>
-                        <button class="btn btn-primary" style="width: 100%; margin-top: 16px;">Ver Ranking →</button>
-                    </div>
+                <div class="card-body">
+                    <p>Clasificación por desempeño operacional</p>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 16px;">Ver Ranking →</button>
                 </div>
             </div>
-        </main>
-    </div>
-
+        </div>
+    </main>
+</div>
     <!-- DIGITADOR VIEW - PASO 1 -->
     <div id="digitadorPaso1View" class="view">
         <main class="container">
